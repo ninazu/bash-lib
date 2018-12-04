@@ -12,9 +12,9 @@ declare -A INISET=(
 
 for KEY in "${!INISET[@]}"
 do
-    if grep -q $KEY $PHP_INI; then 
+    if grep -lq "^[;]*[[:space:]]*$KEY[[:space:]]*=[[:space:]]*" $PHP_INI; then 
         SED_VALUE=$(sed 's/\ /\\ /g' <<<"${INISET[$KEY]}")
-        SED="s%[;]*$KEY[[:space:]]*=[[:space:]]*.*%$KEY = $SED_VALUE%"
+        SED="s%[;]*[[:space:]]*$KEY[[:space:]]*=[[:space:]]*.*%$KEY = $SED_VALUE%"
         sed -i "$SED" $PHP_INI
     else
         echo "$KEY=${INISET[$KEY]}" >> $PHP_INI
